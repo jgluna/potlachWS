@@ -10,8 +10,6 @@ public class User {
     private Gender gender;
     private String country;
     private Date memberSince;
-    private int reportCount;
-    private boolean isActive;
 
     public String getEmail() {
         return email;
@@ -61,19 +59,4 @@ public class User {
         this.memberSince = memberSince;
     }
 
-    public int getReportCount() {
-        return reportCount;
-    }
-
-    public void setReportCount(int reportCount) {
-        this.reportCount = reportCount;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
 }

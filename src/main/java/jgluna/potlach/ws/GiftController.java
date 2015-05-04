@@ -41,4 +41,12 @@ public class GiftController {
     public ArrayList<Gift> getNonReportedGifts(int limitGifts) {
         return repository.queryGifts(limitGifts, false);
     }
+
+    public ArrayList<Gift> getGiftsByTitle(String title, int limit, boolean allowReported){
+        return repository.queryGiftsByTitle(limit, title, allowReported);
+    }
+
+    public ArrayList<Gift> getTopGifts(int limit, boolean allowReported){
+        return repository.queryGiftsOrderByTouched(limit,allowReported);
+    }
 }

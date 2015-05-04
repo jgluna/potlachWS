@@ -1,5 +1,6 @@
 package jgluna.potlach.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class User {
@@ -10,6 +11,7 @@ public class User {
     private Gender gender;
     private String country;
     private Date memberSince;
+    private ArrayList<Gift> gifts;
 
     public String getEmail() {
         return email;
@@ -59,4 +61,11 @@ public class User {
         this.memberSince = memberSince;
     }
 
+    public ArrayList<Gift> getGifts() {
+        return gifts;
+    }
+
+    public void setGifts(ArrayList<Gift> gifts) {
+        this.gifts = gifts;
+    }
 }

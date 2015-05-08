@@ -1,14 +1,24 @@
 package jgluna.potlach.model;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Entity
 public class Gift {
 
+    @Id
     private long id;
+    @ManyToOne
     private Gift parentGift;
+    @OneToMany(mappedBy = "parentGift")
+    private List<Gift> responses;
+
     private String title;
     private String text;
     private Date creationDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     private String imageURL;
     private int touchesCount;
@@ -84,5 +94,13 @@ public class Gift {
 
     public void setReportCount(int reportCount) {
         this.reportCount = reportCount;
+    }
+
+    public List<Gift> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<Gift> responses) {
+        this.responses = responses;
     }
 }

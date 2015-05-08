@@ -1,7 +1,7 @@
 package jgluna.potlach.ws;
 
 import jgluna.potlach.model.Gift;
-import jgluna.potlach.repository.RepositoryInterface;
+import jgluna.potlach.repository.GiftRepository;
 import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -82,13 +82,13 @@ public class GiftControllerTest {
         savedGifts.add(reportedGift1);
         savedGifts.add(reportedGift2);
 
-        RepositoryInterface repo = mock(RepositoryInterface.class);
-        when(repo.saveGift(newGift)).thenReturn(savedGift1);
-        when(repo.findGiftById(1)).thenReturn(savedGift1);
-        when(repo.findGiftById(2)).thenReturn(savedGift2);
+        GiftRepository repo = mock(GiftRepository.class);
+        when(repo.save(newGift)).thenReturn(savedGift1);
+        when(repo.findOne(1l)).thenReturn(savedGift1);
+        when(repo.findOne(2l)).thenReturn(savedGift2);
         when(repo.queryGifts(limitGifts, true)).thenReturn(savedGifts);
-        when(repo.updateGift(savedGift1)).thenReturn(savedGift1);
-        when(repo.updateGift(savedGift2)).thenReturn(savedGift2);
+        when(repo.save(savedGift1)).thenReturn(savedGift1);
+        when(repo.save(savedGift2)).thenReturn(savedGift2);
         when(repo.queryGifts(limitGifts, true)).thenReturn(savedGifts);
         when(repo.queryGifts(limitGifts, false)).thenReturn(reportedGifts);
 

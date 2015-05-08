@@ -1,17 +1,23 @@
 package jgluna.potlach.model;
 
-import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.List;
 
+@Entity
 public class User {
 
+    @Id
     private String email;
     private String name;
     private String password;
     private Gender gender;
     private String country;
     private Date memberSince;
-    private ArrayList<Gift> gifts;
+    @OneToMany
+    private List<Gift> gifts;
 
     public String getEmail() {
         return email;
@@ -61,11 +67,11 @@ public class User {
         this.memberSince = memberSince;
     }
 
-    public ArrayList<Gift> getGifts() {
+    public List<Gift> getGifts() {
         return gifts;
     }
 
-    public void setGifts(ArrayList<Gift> gifts) {
+    public void setGifts(List<Gift> gifts) {
         this.gifts = gifts;
     }
 }

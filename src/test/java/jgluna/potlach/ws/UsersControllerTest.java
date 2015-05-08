@@ -2,7 +2,7 @@ package jgluna.potlach.ws;
 
 import jgluna.potlach.model.Gender;
 import jgluna.potlach.model.User;
-import jgluna.potlach.repository.RepositoryInterface;
+import jgluna.potlach.repository.UserRepository;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,10 +30,9 @@ public class UsersControllerTest {
         newUser.setName("user");
         newUser.setPassword("123");
 
-        RepositoryInterface repo = mock(RepositoryInterface.class);
-        when(repo.saveUser(newUser)).thenReturn(newUser);
-        when(repo.findUserByEmail("some email")).thenReturn(newUser);
-        when(repo.updateUser(newUser)).thenReturn(newUser);
+        UserRepository repo = mock(UserRepository.class);
+        when(repo.save(newUser)).thenReturn(newUser);
+        when(repo.findOne("some email")).thenReturn(newUser);
 
         controller = new UsersController(repo);
     }

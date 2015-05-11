@@ -6,6 +6,8 @@ import jgluna.potlach.repository.UserRepository;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 
@@ -53,8 +55,8 @@ public class UsersControllerTest {
     @Test
     public void updateUser() {
         newUser.setPassword("456");
-        boolean response = controller.updateUser(newUser);
-        assertTrue(response);
+        ResponseEntity<Void> response = controller.updateUser(newUser);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 
     @Test

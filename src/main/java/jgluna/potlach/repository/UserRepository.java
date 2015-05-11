@@ -1,13 +1,13 @@
 package jgluna.potlach.repository;
 
 import jgluna.potlach.model.User;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
-import java.util.ArrayList;
+public interface UserRepository extends Repository<User, String> {
 
-//TODO agregar queries, sino spring-boot revienta
-@Repository
-public interface UserRepository extends CrudRepository<User, String> {
-    ArrayList<User> queryTopUsers(int limit);
+    User save(User user);
+
+    User findOne(String email);
+
+//    ArrayList<User> queryTopUsers(int limit);
 }

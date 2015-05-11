@@ -1,18 +1,30 @@
 package jgluna.potlach.repository;
 
 import jgluna.potlach.model.Gift;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 
-//TODO agregar queries, sino spring-boot revienta
-@Repository
-public interface GiftRepository extends CrudRepository<Gift, Long> {
+public interface GiftRepository extends Repository<Gift, Long> {
 
-    ArrayList<Gift> queryGifts(int limit, boolean allowReported);
+    void delete(Gift deleted);
 
-    ArrayList<Gift> queryGiftsOrderByTouched(int limit, boolean allowReported);
+    Gift findOne(Long id);
 
-    ArrayList<Gift> queryGiftsByTitle(int limit, String partialTitle, boolean allowReported);
+    Gift save(Gift persisted);
+
+    @Query("select g from Gift g where g.reportCount=0")
+    ArrayList<Gift> queryNonReportedGifts(Pageable pageable);
+
+    @Query("select g from Gift g")
+    ArrayList<Gift> queryGifts(Pageable pageable);
+
+    @Query("select g from Gift g where g.title like :title%")
+    ArrayList<Gift> queryGiftsByTitle(@Param("title") String partialTitle, Pageable pageable);
+
+    @Query("select g from Gift g where g.title like :title% and g.reportCount=0")
+    ArrayList<Gift> queryNonReportedGiftsByTitle(@Param("title") String partialTitle, Pageable pageable);
 }

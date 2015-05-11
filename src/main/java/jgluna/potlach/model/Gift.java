@@ -17,7 +17,7 @@ public class Gift {
     private String title;
     private String text;
     private Date creationDate;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
     private String imageURL;

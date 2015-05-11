@@ -16,7 +16,7 @@ public class User {
     private Gender gender;
     private String country;
     private Date memberSince;
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Gift> gifts;
 
     public String getEmail() {

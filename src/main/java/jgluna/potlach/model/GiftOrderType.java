@@ -4,6 +4,7 @@ public enum GiftOrderType {
 
     USER("user.email"),
     TOUCHED("touchesCount"),
+    TITLE("title"),
     DATE("creationDate");
 
     private final String column;

@@ -8,6 +8,7 @@ import java.util.List;
 public class Gift {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @ManyToOne
     private Gift parentGift;

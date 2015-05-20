@@ -2,9 +2,7 @@ package jgluna.potlach.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class User {
@@ -16,8 +14,6 @@ public class User {
     private Gender gender;
     private String country;
     private Date memberSince;
-    @OneToMany(mappedBy = "user")
-    private List<Gift> gifts;
 
     public String getEmail() {
         return email;
@@ -65,13 +61,5 @@ public class User {
 
     public void setMemberSince(Date memberSince) {
         this.memberSince = memberSince;
-    }
-
-    public List<Gift> getGifts() {
-        return gifts;
-    }
-
-    public void setGifts(List<Gift> gifts) {
-        this.gifts = gifts;
     }
 }

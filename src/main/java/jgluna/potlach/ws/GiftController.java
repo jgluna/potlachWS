@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,56 +26,82 @@ public class GiftController {
     }
 
     @RequestMapping(value = basePath, method = RequestMethod.POST)
-    public Gift addGift(@RequestBody Gift gift) {
+    public
+    @ResponseBody
+    Gift addGift(@RequestBody Gift gift) {
+        gift.setTitle(gift.getTitle().toUpperCase());
         return repository.save(gift);
     }
 
-    @RequestMapping(value = basePath + "/{id}/report", method = RequestMethod.POST)
-    public int reportGift(@PathVariable("id") long giftId) {
+    @RequestMapping(value = basePath + "/{id}/report", method = RequestMethod.PUT)
+    public
+    @ResponseBody
+    Gift reportGift(@PathVariable("id") long giftId) {
         Gift gift = repository.findOne(giftId);
         gift.setReportCount(gift.getReportCount() + 1);
-        Gift updatedGift = repository.save(gift);
-        return updatedGift.getReportCount();
+        return repository.save(gift);
     }
 
-    @RequestMapping(value = basePath + "/{id}/like", method = RequestMethod.POST)
-    public boolean likeGift(@PathVariable("id") long giftId) {
+    @RequestMapping(value = basePath + "/{id}/like", method = RequestMethod.PUT)
+    public
+    @ResponseBody
+    Gift likeGift(@PathVariable("id") long giftId) {
         Gift gift = repository.findOne(giftId);
         gift.setTouchesCount(gift.getTouchesCount() + 1);
-        Gift updatedGift = repository.save(gift);
-        return updatedGift != null;
+        return repository.save(gift);
     }
 
     @RequestMapping(value = basePath + "/{id}", method = RequestMethod.GET)
-    public Gift getGift(@PathVariable("id") long giftId) {
-        return repository.findOne(giftId);
+    public
+    @ResponseBody
+    ResponseEntity<Gift> getGift(@PathVariable("id") long giftId) {
+        Gift gift = repository.findOne(giftId);
+        if (gift == null) {
+            return new ResponseEntity<Gift>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Gift>(gift, HttpStatus.OK);
     }
 
     @RequestMapping(value = basePath, method = RequestMethod.GET)
-    public ArrayList<Gift> queryGifts(@RequestParam("allowreported") boolean allowReported,
-                                      @RequestParam("order") String orderType,
-                                      @RequestParam("pagesize") int pageSize,
-                                      @RequestParam("page") int pageNumber) {
-        Sort sort = new Sort(Sort.Direction.ASC, GiftOrderType.fromString(orderType).getColumn());
+    public
+    @ResponseBody
+    ResponseEntity<ArrayList<Gift>> queryGifts(@RequestParam("allowreported") boolean allowReported,
+                                               @RequestParam("orderfield") String orderField,
+                                               @RequestParam("orderdirection") String orderDirection,
+                                               @RequestParam("pagesize") int pageSize,
+                                               @RequestParam("page") int pageNumber) {
+        Sort sort = new Sort(Sort.Direction.fromString(orderDirection), GiftOrderType.fromString(orderField).getColumn());
         Pageable page = new PageRequest(pageNumber, pageSize, sort);
+        ArrayList<Gift> queriedGifts = null;
         if (allowReported) {
-            return repository.queryGifts(page);
+            queriedGifts = repository.queryGifts(page);
         }
-        return repository.queryNonReportedGifts(page);
+        queriedGifts = repository.queryNonReportedGifts(page);
+        if (queriedGifts == null) {
+            return new ResponseEntity<ArrayList<Gift>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<ArrayList<Gift>>(queriedGifts, HttpStatus.OK);
     }
 
     @RequestMapping(value = basePath + "/queryByTitle", method = RequestMethod.GET)
-    public ArrayList<Gift> getGiftsByTitle(@RequestParam("title") String title,
-                                           @RequestParam("allowreported") boolean allowReported,
-                                           @RequestParam("order") String orderType,
-                                           @RequestParam("pagesize") int pageSize,
-                                           @RequestParam("page") int pageNumber) {
-        Sort sort = new Sort(Sort.Direction.ASC, GiftOrderType.fromString(orderType).getColumn());
+    public
+    @ResponseBody
+    ResponseEntity<ArrayList<Gift>> getGiftsByTitle(@RequestParam("title") String title,
+                                                    @RequestParam("allowreported") boolean allowReported,
+                                                    @RequestParam("pagesize") int pageSize,
+                                                    @RequestParam("page") int pageNumber) {
+        Sort sort = new Sort(Sort.Direction.ASC, GiftOrderType.TITLE.getColumn());
         Pageable page = new PageRequest(pageNumber, pageSize, sort);
+        ArrayList<Gift> queriedGifts;
         if (allowReported) {
-            return repository.queryGiftsByTitle(title, page);
+            queriedGifts = repository.queryGiftsByTitle(title.toUpperCase(), page);
+        } else {
+            queriedGifts = repository.queryNonReportedGiftsByTitle(title, page);
         }
-        return repository.queryNonReportedGiftsByTitle(title, page);
+        if (queriedGifts == null) {
+            return new ResponseEntity<ArrayList<Gift>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<ArrayList<Gift>>(queriedGifts, HttpStatus.OK);
     }
 
     @RequestMapping(value = basePath + "/{id}", method = RequestMethod.DELETE)
